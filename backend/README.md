@@ -1,6 +1,6 @@
 # College Review API
 
-A production-ready REST API for a College Review System. Users can register, browse colleges, and post reviews with role-based access control.
+ Users can register, browse colleges, and post reviews with role-based access control.
 
 ---
 
@@ -301,15 +301,16 @@ Supports JWT auth via the "Authorize" button (enter `Bearer <your_token>`).
 
 ## Production Readiness Notes
 
-- **Passwords** are hashed with bcryptjs (salt rounds: 10) and never returned in any response (`select: false` on schema + `toJSON` override).
-- **Rate limiting** - 100 requests per 15-minute window per IP on all `/api/*` routes.
-- **Helmet** sets security-related HTTP headers.
-- **CORS** is enabled (configure allowed origins in production by passing options to `cors()`).
-- **JWT** tokens expire (configurable via `JWT_EXPIRES_IN`).
-- **MongoDB aggregation** is used for college rating stats to avoid N+1 queries.
-- **Compound index** on `Review` (`college + author`) enforces one-review-per-user-per-college at the database level.
-- **Cascade delete** - deleting a college removes all associated reviews.
-- **Graceful shutdown** - the server catches `SIGTERM`/`SIGINT` and closes cleanly.
-- **Global error handler** normalizes all errors (Mongoose, JWT, duplicates) into a consistent JSON shape.
-- **Health check** endpoint at `/api/health` suitable for load balancer probes.
-- For production deployment, also consider: HTTPS termination, environment-specific CORS whitelist, centralized logging (e.g., Winston + CloudWatch), and secrets management (AWS Secrets Manager, Vault).
+* **Password Security** – Passwords are hashed with bcryptjs and never exposed in API responses.
+* **Rate Limiting** – Limits API requests to prevent abuse and brute-force attacks.
+* **Helmet** – Adds security headers to protect against common web vulnerabilities.
+* **CORS** – Restricts API access to trusted origins in production.
+* **JWT Authentication** – Uses expiring JSON Web Tokens for secure authentication.
+* **MongoDB Aggregation** – Efficiently calculates college ratings and review statistics.
+* **Compound Index** – Ensures each user can submit only one review per college.
+* **Cascade Delete** – Automatically removes reviews when a college is deleted.
+* **Graceful Shutdown** – Safely closes the server during shutdown or restarts.
+* **Global Error Handler** – Returns consistent and structured error responses.
+* **Health Check** – Provides a monitoring endpoint to verify API availability.
+* **Production Ready** – Supports secure deployment with HTTPS, logging, and secrets management.
+
