@@ -1,7 +1,5 @@
 # College Review API
 
- Users can register, browse colleges, and post reviews with role-based access control.
-
 ---
 
 ## Tech Stack
@@ -99,7 +97,7 @@ The server starts on `http://localhost:5000`.
 
 ### Docker
 
-> ⚠️ **Important:** `docker compose` reads `.env` from the **repository root** (not `backend/`).  
+>  **Important:** `docker compose` reads `.env` from the **repository root** (not `backend/`).  
 > You **must** create it before running `docker compose up`, otherwise the command will fail with  
 > `env file .env not found`.
 
@@ -122,8 +120,7 @@ docker compose down
 docker compose down -v
 ```
 
-> 💡 **First time?** After `docker compose up`, always run the seed command before logging in.  
-> Without it the database is empty and all logins will return 401.
+
 
 **Services after `docker compose up`:**
 
@@ -135,8 +132,6 @@ docker compose down -v
 | Health Check | http://localhost:5000/api/health |
 | MongoDB | mongodb://localhost:27017 |
 
-> The `.env.example` at the repo root uses `MONGODB_URI=mongodb://mongo:27017/college_review`  
-> (`mongo` is the Docker service name). For local development without Docker, change it to `localhost`.
 
 ---
 
@@ -322,16 +317,15 @@ Supports JWT auth via the "Authorize" button (enter `Bearer <your_token>`).
 
 ## Production Readiness Notes
 
-* **Password Security** – Passwords are hashed with bcryptjs and never exposed in API responses.
-* **Rate Limiting** – Limits API requests to prevent abuse and brute-force attacks.
-* **Helmet** – Adds security headers to protect against common web vulnerabilities.
-* **CORS** – Restricts API access to trusted origins in production.
-* **JWT Authentication** – Uses expiring JSON Web Tokens for secure authentication.
-* **MongoDB Aggregation** – Efficiently calculates college ratings and review statistics.
-* **Compound Index** – Ensures each user can submit only one review per college.
-* **Cascade Delete** – Automatically removes reviews when a college is deleted.
-* **Graceful Shutdown** – Safely closes the server during shutdown or restarts.
-* **Global Error Handler** – Returns consistent and structured error responses.
-* **Health Check** – Provides a monitoring endpoint to verify API availability.
-* **Production Ready** – Supports secure deployment with HTTPS, logging, and secrets management.
+- Passwords hashed with bcryptjs, never returned in responses (`select: false` + `toJSON` override)
+- Rate limiting: 100 req / 15 min per IP in production
+- Helmet sets security HTTP headers
+- CORS restricted to configured origins via `ALLOWED_ORIGIN` env var
+- JWT tokens expire (configurable via `JWT_EXPIRES_IN`)
+- MongoDB aggregation for rating stats — no N+1 queries
+- Compound index on `Review` enforces one review per user per college at DB level
+- Cascade delete: removing a college removes all its reviews
+- Graceful shutdown on `SIGTERM` / `SIGINT`
+- Global error handler normalizes Mongoose, JWT, and duplicate key errors
+- Health check at `/api/health` for load balancer probes
 

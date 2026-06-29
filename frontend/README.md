@@ -1,3 +1,12 @@
-# Frontend
+# College Review System — Frontend
 
-College Review System frontend built with React + TypeScript + Vite + Tailwind CSS.
+React + TypeScript + Vite + Tailwind CSS
+
+## Setup
+
+```bash
+npm install
+npm run dev
+```
+
+Open http://localhost:5173

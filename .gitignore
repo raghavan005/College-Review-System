@@ -1,0 +1,15 @@
+# Environment files — never commit secrets
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+
+# Docker volumes
+mongo_data/
+
+# OS
+.DS_Store
+Thumbs.db
