@@ -99,23 +99,44 @@ The server starts on `http://localhost:5000`.
 
 ### Docker
 
+> ⚠️ **Important:** `docker compose` reads `.env` from the **repository root** (not `backend/`).  
+> You **must** create it before running `docker compose up`, otherwise the command will fail with  
+> `env file .env not found`.
+
 ```bash
-# 1. Copy env file
+# 0. From the repository root — create the .env file FIRST
 cp .env.example .env
-# Edit JWT_SECRET
+# Open .env and set JWT_SECRET to a strong random string
 
-# 2. Build and start all services
-docker-compose up --build
+# 1. Build and start all services
+docker compose up -d --build
 
-# 3. Seed data into the running container
-docker-compose exec api node scripts/seed.js
+# 2. Seed the database (run once after first build)
+#    Creates admin, teacher, student users + 8 colleges + 15 reviews
+docker compose exec api node scripts/seed.js
 
-# 4. Stop services
-docker-compose down
+# 3. Stop services
+docker compose down
 
-# 5. Stop and remove volumes
-docker-compose down -v
+# 4. Stop and remove volumes (wipes DB data)
+docker compose down -v
 ```
+
+> 💡 **First time?** After `docker compose up`, always run the seed command before logging in.  
+> Without it the database is empty and all logins will return 401.
+
+**Services after `docker compose up`:**
+
+| Service | URL |
+|---------|-----|
+| Frontend app | http://localhost:3000 |
+| REST API | http://localhost:5000 |
+| Swagger Docs | http://localhost:5000/api/docs |
+| Health Check | http://localhost:5000/api/health |
+| MongoDB | mongodb://localhost:27017 |
+
+> The `.env.example` at the repo root uses `MONGODB_URI=mongodb://mongo:27017/college_review`  
+> (`mongo` is the Docker service name). For local development without Docker, change it to `localhost`.
 
 ---
 

@@ -1,4 +1,6 @@
-const BASE = 'http://localhost:5000/api';
+// In Docker: VITE_API_BASE=/api  → nginx proxies /api/* → backend container
+// In local dev: falls back to http://localhost:5000/api
+const BASE = import.meta.env.VITE_API_BASE ?? 'http://localhost:5000/api';
 
 function getToken(): string | null {
   return localStorage.getItem('cr_token');
