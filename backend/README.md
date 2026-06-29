@@ -240,6 +240,10 @@ Tests use `mongodb-memory-server` - no real database is needed.
 npm test
 ```
 
+**Test results:**
+
+![Test Results](../frontend/public/test-result)
+
 **Expected output:**
 
 ```
